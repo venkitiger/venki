@@ -2,7 +2,7 @@
 declare(strict_types=1);
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 define('APP_NAME','CineCast');
-define('BASE_URL', rtrim(str_replace('\\\\','/',dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/'));
+define('BASE_URL', (function () { $script = str_replace('\\\\','/', $_SERVER['SCRIPT_NAME'] ?? '/'); $dir = rtrim(dirname($script), '/'); if (in_array(basename($dir), ['auth','casting'], true)) $dir = rtrim(dirname($dir), '/'); return $dir === '' || $dir === '.' ? '' : $dir; })());
 function url(string $path=''): string { $root = (defined('BASE_URL') && BASE_URL !== '/' ? BASE_URL : ''); return $root . '/' . ltrim($path,'/'); }
 function e(?string $value): string { return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8'); }
 function db(): PDO {
